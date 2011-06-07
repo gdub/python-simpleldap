@@ -1,0 +1,10 @@
+=========
+Changelog
+=========
+
+0.7 - In development
+====================
+* Initial release.
+* ``Connection`` class for conveniently creating connections to LDAP servers.
+* ``LDAPItem`` class for wrapping LDAP result objects and allowing more
+  convenient access to their contained data.

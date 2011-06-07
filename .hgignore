@@ -1,0 +1,6 @@
+syntax: glob
+*.pyc
+*~
+.*project
+dist/*
+*egg-info*
