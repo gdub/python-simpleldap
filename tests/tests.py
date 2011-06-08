@@ -27,6 +27,12 @@ class ConnectionTests(TestCase):
             else:
                 conn.close()
 
+    def test_context_manager(self):
+        host, port, method, cert = self.hosts[0]
+        with simpleldap.Connection(hostname=host, port=port, encryption=method,
+                                   require_cert=cert) as conn:
+            conn.connection.whoami_s()
+
 
 class LDAPItemTests(TestCase):
 
