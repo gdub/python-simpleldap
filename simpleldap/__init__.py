@@ -4,14 +4,9 @@ This module makes simple LDAP queries simple.
 
 import ldap
 
-DEBUG = False
-if DEBUG:
-    # Log debug statements to standard error.
-    import sys
-    ldap.set_option(ldap.OPT_DEBUG_LEVEL, 255)
-    ldapmodule_trace_level=1
-    ldapmodule_trace_file=sys.stderr
-
+#
+# Exceptions.
+#
 
 class SimpleLDAPException(Exception):
     """Base class for all simpleldap exceptions."""
@@ -27,6 +22,9 @@ class MultipleObjectsFound(SimpleLDAPException):
     a single item.
     """
 
+#
+# Classes.
+#
 
 class LDAPItem(dict):
     """
@@ -84,16 +82,28 @@ class Connection(object):
     result_item_class = LDAPItem
 
     def __init__(self, hostname, port=None, dn='', password='',
-                 encryption=None):
+                 encryption=None, require_cert=None, debug=False,
+                 options=None):
         """
-        Bind using the passed DN and password.
+        Bind to hostname:port using the passed distinguished name (DN), as
+        ``dn``, and password.
 
         If no user and password is given, try to connect anonymously with a
-        blank user DN and password.
+        blank DN and password.
 
-        ``encryption`` should be one of 'tls', 'ssl', or ``None``.  If 'tls',
-        then the standard port 389 is used by default and after binding, tls is
-        started.  If 'ssl', then port 636 is used by default.
+        ``encryption`` should be one of ``'tls'``, ``'ssl'``, or ``None``.
+        If ``'tls'``, then the standard port 389 is used by default and after
+        binding, tls is started.  If ``'ssl'``, then port 636 is used by
+        default.
+
+        ``require_cert`` is None by default.  Set this to ``True`` or
+        ``False`` to set the ``OPT_X_TLS_REQUIRE_CERT`` ldap option.
+
+        If ``debug`` is ``True``, debug options are turned on within ldap and
+        statements are ouput to standard error.  Default is ``False``.
+
+        If give, ``options`` should be a dictionary of any additional ldap
+        options to set, e.g.: ``{'OPT_TIMELIMIT': 3}``.
         """
         if not encryption or encryption == 'tls':
             protocol = 'ldap'
@@ -106,6 +116,16 @@ class Connection(object):
         else:
             raise ValueError("Invalid encryption protocol."
                              " Must be one of: 'tls' or 'ssl'.")
+
+        if require_cert is not None:
+            ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, require_cert)
+        if debug:
+            ldap.set_option(ldap.OPT_DEBUG_LEVEL, 255)
+        else:
+            ldap.set_option(ldap.OPT_DEBUG_LEVEL, 0)
+        if options:
+            for name, value in options.iteritems():
+                ldap.set_option(getattr(ldap, name), value)
 
         url='%s://%s:%s' % (protocol, hostname, port)
         self.connection = ldap.initialize(url)
