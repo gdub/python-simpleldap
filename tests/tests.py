@@ -4,6 +4,30 @@ from unittest import TestCase
 import simpleldap
 
 
+class ConnectionTests(TestCase):
+
+    hosts = (
+        # host, port, encryption type, require_cert.
+        ('ldap.utexas.edu', None, None, None),
+        ('ldap.utexas.edu', 389, None, None),
+        ('ldap.ucdavis.edu', None, 'tls', False),
+        ('ldap.ucdavis.edu', 389, 'tls', False),
+        ('ldap.ucdavis.edu', None, 'ssl', False),
+        ('ldap.ucdavis.edu', 636, 'ssl', False),
+    )
+
+    def test_connect(self):
+        for host, port, method, cert in self.hosts:
+            try:
+                conn = simpleldap.Connection(hostname=host, port=port,
+                                             encryption=method, require_cert=cert)
+            except Exception, e:
+                self.fail("Got error connecting to %s %s %s %s: %s"
+                          % (host, port, method, cert, e))
+            else:
+                conn.close()
+
+
 class LDAPItemTests(TestCase):
 
     mock_results = [
