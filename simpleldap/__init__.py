@@ -4,6 +4,9 @@ This module makes simple LDAP queries simple.
 
 import ldap
 
+from simpleldap.cidict import cidict
+
+
 #
 # Exceptions.
 #
@@ -26,13 +29,14 @@ class MultipleObjectsFound(SimpleLDAPException):
 # Classes.
 #
 
-class LDAPItem(dict):
+class LDAPItem(cidict):
     """
     A convenience class for wrapping standard LDAPResult objects.
     """
 
-    def __init__(self, LDAPResult):
-        self.dn, self.attributes = LDAPResult
+    def __init__(self, result):
+        super(LDAPItem, self).__init__()
+        self.dn, self.attributes = result
         # XXX: quick and dirty, should really proxy straight to the existing
         # self.attributes dict.
         for attribute, values in self.attributes.iteritems():

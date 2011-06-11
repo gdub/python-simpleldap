@@ -76,3 +76,11 @@ displayName: Joe L. Smith
         self.assertEqual(item.first('cn'), 'Joseph Smith')
         self.assertEqual(item.first('sn'), 'Smith')
         self.assertRaises(KeyError, item.first, 'foo')
+
+    def test_case_insensitive(self):
+        item = simpleldap.LDAPItem(self.mock_results[0])
+        self.assertEqual(item['cn'], ['Joseph Smith', 'Joseph Smith Jr.'])
+        self.assertEqual(item['cn'], item['CN'])
+        self.assertEqual(item.first('cn'), item.first('CN'))
+        self.assertTrue('cn' in item)
+        self.assertTrue('CN' in item)
