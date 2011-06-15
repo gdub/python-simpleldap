@@ -159,7 +159,7 @@ class Connection(object):
         """
         Search the directory.
         """
-        results=self.connection.search_ext_s(
+        results = self.connection.search_ext_s(
             base_dn, scope, filter, attrs, timeout=timeout, sizelimit=limit)
         return self.to_items(results)
 
