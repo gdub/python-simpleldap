@@ -1,6 +1,8 @@
 from operator import itemgetter
 from unittest import TestCase
 
+import ldap
+
 import simpleldap
 
 
@@ -32,6 +34,38 @@ class ConnectionTests(TestCase):
         with simpleldap.Connection(hostname=host, port=port, encryption=method,
                                    require_cert=cert) as conn:
             conn.connection.whoami_s()
+
+    def test_encrypted_connection(self):
+        self.assertRaises(simpleldap.InvalidEncryptionProtocol,
+                          simpleldap.Connection,
+                          hostname='ldap.ucdavis.edu', encryption='foo')
+
+    def test_connection_options(self):
+        opt = 'OPT_TIMELIMIT'
+        value = 1000
+        conn = simpleldap.Connection(hostname='ldap.utexas.edu',
+                                     options={opt: value})
+        self.assertEqual(conn.connection.get_option(getattr(ldap, opt)), value)
+
+    def test_search(self):
+        conn = simpleldap.Connection('ldap.ucdavis.edu')
+        objs = conn.search('cn=*', base_dn='ou=Groups,dc=ucdavis,dc=edu')
+        self.assertTrue(len(objs) > 3)
+        for obj in objs:
+            self.assertTrue(isinstance(obj, conn.result_item_class))
+
+    def test_get(self):
+        conn = simpleldap.Connection('ldap.ucdavis.edu')
+        obj = conn.get('cn=External Anonymous',
+                       base_dn='ou=Groups,dc=ucdavis,dc=edu')
+        self.assertTrue(isinstance(obj, conn.result_item_class))
+        self.assertEqual(obj['cn'], ['External Anonymous'])
+
+        self.assertRaises(simpleldap.ObjectNotFound, conn.get,
+                          'cn=Does not exist',
+                          base_dn='ou=Groups,dc=ucdavis,dc=edu')
+        self.assertRaises(simpleldap.MultipleObjectsFound, conn.get, 'cn=*',
+                          base_dn='ou=Groups,dc=ucdavis,dc=edu')
 
 
 class LDAPItemTests(TestCase):
@@ -84,3 +118,8 @@ displayName: Joe L. Smith
         self.assertEqual(item.first('cn'), item.first('CN'))
         self.assertTrue('cn' in item)
         self.assertTrue('CN' in item)
+
+    def test_value_contains(self):
+        item = simpleldap.LDAPItem(self.mock_results[0])
+        self.assertTrue(item.value_contains('Joseph', 'cn'))
+        self.assertFalse(item.value_contains('Bob', 'cn'))
