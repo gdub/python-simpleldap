@@ -25,6 +25,13 @@ class MultipleObjectsFound(SimpleLDAPException):
     a single item.
     """
 
+
+class ConnectionException(Exception):
+    """Base class for all Connection object exceptions."""
+
+class InvalidEncryptionProtocol(ConnectionException):
+    """Exception when given an unsupported encryption protocol."""
+
 #
 # Classes.
 #
@@ -106,8 +113,9 @@ class Connection(object):
         If ``debug`` is ``True``, debug options are turned on within ldap and
         statements are ouput to standard error.  Default is ``False``.
 
-        If give, ``options`` should be a dictionary of any additional ldap
-        options to set, e.g.: ``{'OPT_TIMELIMIT': 3}``.
+        If give, ``options`` should be a dictionary of any additional
+        connection-specific ldap  options to set, e.g.:
+        ``{'OPT_TIMELIMIT': 3}``.
         """
         if not encryption or encryption == 'tls':
             protocol = 'ldap'
@@ -118,8 +126,8 @@ class Connection(object):
             if not port:
                 port = 636
         else:
-            raise ValueError("Invalid encryption protocol."
-                             " Must be one of: 'tls' or 'ssl'.")
+            raise InvalidEncryptionProtocol(
+                "Invalid encryption protocol, must be one of: 'tls' or 'ssl'.")
 
         if require_cert is not None:
             ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, require_cert)
@@ -127,12 +135,12 @@ class Connection(object):
             ldap.set_option(ldap.OPT_DEBUG_LEVEL, 255)
         else:
             ldap.set_option(ldap.OPT_DEBUG_LEVEL, 0)
-        if options:
-            for name, value in options.iteritems():
-                ldap.set_option(getattr(ldap, name), value)
 
         url='%s://%s:%s' % (protocol, hostname, port)
         self.connection = ldap.initialize(url)
+        if options:
+            for name, value in options.iteritems():
+                self.connection.set_option(getattr(ldap, name), value)
         if encryption == 'tls':
             self.connection.start_tls_s()
         # It seems that python-ldap chokes when passed unicode objects with
