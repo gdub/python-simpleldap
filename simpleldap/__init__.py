@@ -136,8 +136,8 @@ class Connection(object):
         else:
             ldap.set_option(ldap.OPT_DEBUG_LEVEL, 0)
 
-        url='%s://%s:%s' % (protocol, hostname, port)
-        self.connection = ldap.initialize(url)
+        uri = '%s://%s:%s' % (protocol, hostname, port)
+        self.connection = ldap.initialize(uri)
         if options:
             for name, value in options.iteritems():
                 self.connection.set_option(getattr(ldap, name), value)
