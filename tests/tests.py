@@ -22,12 +22,27 @@ class ConnectionTests(TestCase):
         for host, port, method, cert in self.hosts:
             try:
                 conn = simpleldap.Connection(hostname=host, port=port,
-                                             encryption=method, require_cert=cert)
+                                             encryption=method,
+                                             require_cert=cert)
             except Exception, e:
                 self.fail("Got error connecting to %s %s %s %s: %s"
                           % (host, port, method, cert, e))
             else:
                 conn.close()
+
+    def test_initialize_kwargs(self):
+        from StringIO import StringIO
+        output = StringIO()
+        initialize_kwargs = {'trace_file': output, 'trace_level': 0}
+        conn = simpleldap.Connection('ldap.utexas.edu',
+                                     initialize_kwargs=initialize_kwargs)
+        conn.close()
+        self.assertFalse(output.getvalue())
+        initialize_kwargs = {'trace_file': output, 'trace_level': 1}
+        conn = simpleldap.Connection('ldap.utexas.edu',
+                                     initialize_kwargs=initialize_kwargs)
+        conn.close()
+        self.assertTrue(output.getvalue())
 
     def test_context_manager(self):
         host, port, method, cert = self.hosts[0]
@@ -35,7 +50,7 @@ class ConnectionTests(TestCase):
                                    require_cert=cert) as conn:
             conn.connection.whoami_s()
 
-    def test_encrypted_connection(self):
+    def test_invalid_encryption(self):
         self.assertRaises(simpleldap.InvalidEncryptionProtocol,
                           simpleldap.Connection,
                           hostname='ldap.ucdavis.edu', encryption='foo')
@@ -44,7 +59,10 @@ class ConnectionTests(TestCase):
         opt = 'OPT_TIMELIMIT'
         value = 1000
         conn = simpleldap.Connection(hostname='ldap.utexas.edu',
-                                     options={opt: value})
+                                     options={opt: value},
+                                     # No way to really test debug output, but
+                                     # thrown in for coverage.
+                                     debug=True)
         self.assertEqual(conn.connection.get_option(getattr(ldap, opt)), value)
 
     def test_search(self):

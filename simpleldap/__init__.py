@@ -97,7 +97,7 @@ class Connection(object):
 
     def __init__(self, hostname, port=None, dn='', password='',
                  encryption=None, require_cert=None, debug=False,
-                 options=None):
+                 initialize_kwargs=None, options=None):
         """
         Bind to hostname:port using the passed distinguished name (DN), as
         ``dn``, and password.
@@ -140,17 +140,15 @@ class Connection(object):
             ldap.set_option(ldap.OPT_DEBUG_LEVEL, 0)
 
         uri = '%s://%s:%s' % (protocol, hostname, port)
-        self.connection = ldap.initialize(uri)
+        if initialize_kwargs:
+            self.connection = ldap.initialize(uri, **initialize_kwargs)
+        else:
+            self.connection = ldap.initialize(uri)
         if options:
             for name, value in options.iteritems():
                 self.connection.set_option(getattr(ldap, name), value)
         if encryption == 'tls':
             self.connection.start_tls_s()
-        # It seems that python-ldap chokes when passed unicode objects with
-        # non-ascii characters.  So if we have a unicode password, encode
-        # it to utf-8.
-        if isinstance(password, unicode):
-            password = password.encode('utf-8')
         self.connection.simple_bind_s(dn, password)
 
     def __enter__(self):
@@ -188,8 +186,7 @@ class Connection(object):
             return results[0]
         if num_results > 1:
             raise MultipleObjectsFound()
-        if num_results < 1:
-            raise ObjectNotFound()
+        raise ObjectNotFound()
 
     def to_items(self, results):
         """
