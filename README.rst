@@ -38,4 +38,4 @@ Installation
 
 Install using pip::
 
-    pip install python-simpleldap
+    pip install simpleldap
