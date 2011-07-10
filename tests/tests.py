@@ -54,6 +54,19 @@ class ConnectionTests(TestCase):
         for obj in objs:
             self.assertTrue(isinstance(obj, conn.result_item_class))
 
+    def test_search_params(self):
+        conn = simpleldap.Connection('ldap.ucdavis.edu')
+        self.assertRaises(ldap.SIZELIMIT_EXCEEDED, conn.search, 'cn=*',
+                          base_dn='ou=Groups,dc=ucdavis,dc=edu', limit=1)
+        kwargs = {'filter': 'cn=External Anonymous',
+                  'base_dn': 'ou=Groups,dc=ucdavis,dc=edu'}
+        # Should return all attrs.
+        self.assertTrue(len(conn.search(**kwargs)[0]) > 2)
+        # Should return just cn attr.
+        obj = conn.search(attrs=['cn'], **kwargs)[0]
+        self.assertEqual(len(obj), 1)
+        self.assertTrue('cn' in obj)
+
     def test_get(self):
         conn = simpleldap.Connection('ldap.ucdavis.edu')
         obj = conn.get('cn=External Anonymous',
@@ -123,3 +136,8 @@ displayName: Joe L. Smith
         item = simpleldap.LDAPItem(self.mock_results[0])
         self.assertTrue(item.value_contains('Joseph', 'cn'))
         self.assertFalse(item.value_contains('Bob', 'cn'))
+
+
+if __name__ == "__main__":
+    import unittest
+    unittest.main()

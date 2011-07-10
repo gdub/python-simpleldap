@@ -42,3 +42,7 @@ class cidictTests(TestCase):
         self.assertEqual(sorted(d.values()), ['bar', 'baz'])
         d = cidict({'foo': 'bar', 'bar': 'baz'})
         self.assertEqual(sorted(d.items()), [('bar', 'baz'), ('foo', 'bar')])
+
+if __name__ == "__main__":
+    import unittest
+    unittest.main()
