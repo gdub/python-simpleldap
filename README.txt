@@ -1,9 +1,14 @@
-==========
-simpleldap
-==========
+==============
+``simpleldap``
+==============
+
+
+About
+=====
 
 A small wrapper around the python-ldap library that provides a more Pythonic
-interface to the most common LDAP operations.
+interface for LDAP server connections, LDAP objects, and the common get and
+search operations.
 
 
 Example
