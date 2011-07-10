@@ -3,6 +3,7 @@ use_setuptools()
 
 from setuptools import setup
 
+
 setup(
     name="python-simpleldap",
     version="0.7",
