@@ -137,6 +137,12 @@ displayName: Joe L. Smith
         self.assertTrue(item.value_contains('Joseph', 'cn'))
         self.assertFalse(item.value_contains('Bob', 'cn'))
 
+    def test_equals(self):
+        self.assertEqual(simpleldap.LDAPItem(self.mock_results[0]),
+                         simpleldap.LDAPItem(self.mock_results[0]))
+        self.assertNotEqual(simpleldap.LDAPItem(self.mock_results[0]),
+                            simpleldap.LDAPItem(self.mock_results[1]))
+
 
 if __name__ == "__main__":
     import unittest

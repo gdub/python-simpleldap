@@ -82,6 +82,9 @@ class LDAPItem(cidict):
             output.append("%*s: %s" % (longestKeyLength, attr, values))
         return "\n".join(output)
 
+    def __eq__(self, other):
+        return self.dn == other.dn
+
 
 class Connection(object):
     """
