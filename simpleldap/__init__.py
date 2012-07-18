@@ -14,10 +14,12 @@ from simpleldap.cidict import cidict
 class SimpleLDAPException(Exception):
     """Base class for all simpleldap exceptions."""
 
+
 class ObjectNotFound(SimpleLDAPException):
     """
     Exception when no objects were returned, but was expecting a single item.
     """
+
 
 class MultipleObjectsFound(SimpleLDAPException):
     """
@@ -29,8 +31,10 @@ class MultipleObjectsFound(SimpleLDAPException):
 class ConnectionException(Exception):
     """Base class for all Connection object exceptions."""
 
+
 class InvalidEncryptionProtocol(ConnectionException):
     """Exception when given an unsupported encryption protocol."""
+
 
 #
 # Classes.
