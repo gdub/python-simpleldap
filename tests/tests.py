@@ -1,3 +1,4 @@
+from __future__ import with_statement  # Python 2.5 compatibility.
 from operator import itemgetter
 from unittest import TestCase
 
