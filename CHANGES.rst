@@ -2,6 +2,13 @@
 Changelog
 =========
 
+
+In Development
+==============
+* Added tox testing configuration, setup to run against Python 2.5, 2.6,
+  and 2.7.
+
+
 0.7 - July 10, 2011
 ===================
 * Initial release.

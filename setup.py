@@ -16,5 +16,6 @@ setup(
     license="MIT",
     packages=["simpleldap"],
     install_requires=["python-ldap"],
+    tests_require=["tox", "pytest", "pep8", "python-ldap"],
     use_2to3=True,
 )
