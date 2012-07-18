@@ -6,7 +6,7 @@ from setuptools import setup
 
 setup(
     name="simpleldap",
-    version="0.7",
+    version="0.7.1-dev",
     description="A module that makes simple LDAP usage simple.",
     long_description=open('README.rst').read(),
     keywords="ldap simple simpleldap",
