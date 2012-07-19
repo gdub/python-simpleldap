@@ -21,7 +21,7 @@ CLASSIFIERS = [
 
 setup(
     name="simpleldap",
-    version="0.7.1-dev",
+    version="0.7.1",
     description="A module that makes simple LDAP usage simple.",
     long_description=open('README.rst').read(),
     keywords="ldap simple simpleldap",

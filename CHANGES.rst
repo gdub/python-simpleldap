@@ -3,8 +3,8 @@ Changelog
 =========
 
 
-In Development
-==============
+0.7.1 - July 19, 2012
+=====================
 * Added tox testing configuration, setup to run against Python 2.5, 2.6,
   and 2.7.
 * Converted repo from hg to git.
