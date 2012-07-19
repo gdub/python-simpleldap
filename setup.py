@@ -27,7 +27,7 @@ setup(
     keywords="ldap simple simpleldap",
     author="Gary Wilson Jr.",
     author_email="gary@thegarywilson.com",
-    url="https://bitbucket.org/gdub/python-simpleldap/",
+    url="https://github.com/gdub/python-simpleldap",
     license="MIT",
     packages=["simpleldap"],
     install_requires=["python-ldap"],
