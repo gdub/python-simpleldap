@@ -124,6 +124,9 @@ class Connection(object):
         connection-specific ldap  options to set, e.g.:
         ``{'OPT_TIMELIMIT': 3}``.
         """
+
+        self._search_defaults = {}
+
         if not encryption or encryption == 'tls':
             protocol = 'ldap'
             if not port:
@@ -155,6 +158,31 @@ class Connection(object):
             self.connection.start_tls_s()
         self.connection.simple_bind_s(dn, password)
 
+    def search_defaults(self, **kwargs):
+        """
+        Set defaults for search.
+
+        conn.search_defaults(basedn='dc=example,dc=com', timeout=100)
+        conn.search_defaults(attrs=['cn'], scope=ldap.SCOPE_BASE)
+
+        """
+        self._search_defaults.update(kwargs)
+
+    def reset_search_defaults(self, args):
+        """
+        Unset defaults that might have been set by search_defaults
+
+        conn.search_defaults(scope=ldap.SCOPE_BASE)
+        conn.reset_search_defaults(['scope'])
+        """
+
+        if args == '*':
+            self._search_defaults = {}
+        else:
+            for arg in args:
+                if arg in self._search_defaults:
+                    del self._search_defaults[arg]
+
     def __enter__(self):
         return self
 
@@ -167,11 +195,25 @@ class Connection(object):
         """
         self.connection.unbind_s()
 
-    def search(self, filter, base_dn='', attrs=None, scope=ldap.SCOPE_SUBTREE,
-               timeout=-1, limit=0):
+    def search(self, filter, base_dn=None, attrs=None, scope=None,
+               timeout=None, limit=None):
         """
         Search the directory.
         """
+        if base_dn is None:
+            base_dn = self._search_defaults.get('base_dn', '')
+        if attrs is None:
+            attrs = self._search_defaults.get('attrs', None)
+        if scope is None:
+            scope = self._search_defaults.get('scope', ldap.SCOPE_SUBTREE)
+        if timeout is None:
+            timeout = self._search_defaults.get('timeout', -1)
+        if limit is None:
+            limit = self._search_defaults.get('limit', 0)
+
+        from pprint import pprint as pp
+        pp(self._search_defaults)
+        print "timeout: {0}".format(timeout)
         results = self.connection.search_ext_s(
             base_dn, scope, filter, attrs, timeout=timeout, sizelimit=limit)
         return self.to_items(results)
