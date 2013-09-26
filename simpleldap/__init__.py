@@ -211,9 +211,6 @@ class Connection(object):
         if limit is None:
             limit = self._search_defaults.get('limit', 0)
 
-        from pprint import pprint as pp
-        pp(self._search_defaults)
-        print "timeout: {0}".format(timeout)
         results = self.connection.search_ext_s(
             base_dn, scope, filter, attrs, timeout=timeout, sizelimit=limit)
         return self.to_items(results)
