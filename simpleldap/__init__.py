@@ -168,12 +168,12 @@ class Connection(object):
         """
         self._search_defaults.update(kwargs)
 
-    def reset_search_defaults(self, args=None):
+    def clear_search_defaults(self, args=None):
         """
         Unset defaults that might have been set by set_search_defaults
 
         conn.set_search_defaults(scope=ldap.SCOPE_BASE)
-        conn.reset_search_defaults(['scope'])
+        conn.clear_search_defaults(['scope'])
         """
 
         if args is None:

@@ -92,7 +92,7 @@ class ConnectionTests(TestCase):
         conn.set_search_defaults(limit=1)
         self.assertRaises(ldap.SIZELIMIT_EXCEEDED, conn.search, 'cn=*')
         kwargs = {'filter': 'cn=External Anonymous', }
-        conn.reset_search_defaults(['limit'])
+        conn.clear_search_defaults(['limit'])
         # Should return all attrs.
         self.assertTrue(len(conn.search(**kwargs)[0]) > 2)
         # Should return just cn attr.
@@ -100,7 +100,7 @@ class ConnectionTests(TestCase):
         obj = conn.search(**kwargs)[0]
         self.assertEqual(len(obj), 1)
         self.assertTrue('cn' in obj)
-        conn.reset_search_defaults()
+        conn.clear_search_defaults()
         self.assertEqual(conn._search_defaults, {})
 
     def test_get(self):
