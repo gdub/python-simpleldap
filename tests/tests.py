@@ -100,6 +100,8 @@ class ConnectionTests(TestCase):
         obj = conn.search(**kwargs)[0]
         self.assertEqual(len(obj), 1)
         self.assertTrue('cn' in obj)
+        conn.reset_search_defaults('*')
+        self.assertEqual(conn._search_defaults, {})
 
     def test_get(self):
         conn = simpleldap.Connection('ldap.ucdavis.edu')
