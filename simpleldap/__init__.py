@@ -158,21 +158,21 @@ class Connection(object):
             self.connection.start_tls_s()
         self.connection.simple_bind_s(dn, password)
 
-    def search_defaults(self, **kwargs):
+    def set_search_defaults(self, **kwargs):
         """
         Set defaults for search.
 
-        conn.search_defaults(basedn='dc=example,dc=com', timeout=100)
-        conn.search_defaults(attrs=['cn'], scope=ldap.SCOPE_BASE)
+        conn.set_search_defaults(basedn='dc=example,dc=com', timeout=100)
+        conn.set_search_defaults(attrs=['cn'], scope=ldap.SCOPE_BASE)
 
         """
         self._search_defaults.update(kwargs)
 
     def reset_search_defaults(self, args):
         """
-        Unset defaults that might have been set by search_defaults
+        Unset defaults that might have been set by set_search_defaults
 
-        conn.search_defaults(scope=ldap.SCOPE_BASE)
+        conn.set_search_defaults(scope=ldap.SCOPE_BASE)
         conn.reset_search_defaults(['scope'])
         """
 
