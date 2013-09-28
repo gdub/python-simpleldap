@@ -168,7 +168,7 @@ class Connection(object):
         """
         self._search_defaults.update(kwargs)
 
-    def reset_search_defaults(self, args):
+    def reset_search_defaults(self, args=None):
         """
         Unset defaults that might have been set by set_search_defaults
 
@@ -176,7 +176,7 @@ class Connection(object):
         conn.reset_search_defaults(['scope'])
         """
 
-        if args == '*':
+        if args is None:
             self._search_defaults = {}
         else:
             for arg in args:
