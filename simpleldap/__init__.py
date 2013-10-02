@@ -99,6 +99,14 @@ class Connection(object):
     # this to a class of their liking.
     result_item_class = LDAPItem
 
+    # List of exceptions to treat as a failed bind operation in the
+    # authenticate method.
+    failed_authentication_exceptions = [
+        ldap.NO_SUCH_OBJECT,  # e.g. dn matches no objects.
+        ldap.UNWILLING_TO_PERFORM,  # e.g. dn with no password.
+        ldap.INVALID_CREDENTIALS,  # e.g. wrong password.
+    ]
+
     def __init__(self, hostname='localhost', port=None, dn='', password='',
                  encryption=None, require_cert=None, debug=False,
                  initialize_kwargs=None, options=None):
@@ -201,3 +209,17 @@ class Connection(object):
         convenient objects.
         """
         return [self.result_item_class(item) for item in results]
+
+    def authenticate(self, dn='', password=''):
+        """
+        Attempt to authenticate given dn and password using a bind operation.
+        Return True if the bind is successful, and return False there was an
+        exception raised that is contained in
+        self.failed_authentication_exceptions.
+        """
+        try:
+            self.connection.simple_bind_s(dn, password)
+        except tuple(self.failed_authentication_exceptions):
+            return False
+        else:
+            return True

@@ -100,6 +100,25 @@ class ConnectionTests(TestCase):
                           base_dn='ou=Groups,dc=ucdavis,dc=edu')
 
 
+class AuthenticateTests(TestCase):
+
+    def test_success(self):
+        conn = simpleldap.Connection('ldap.ucdavis.edu')
+        self.assertTrue(conn.authenticate('cn=External Anonymous,ou=Groups,dc=ucdavis,dc=edu', ''))
+
+    def test_fail_no_such_object(self):
+        conn = simpleldap.Connection('ldap.ucdavis.edu')
+        self.assertFalse(conn.authenticate('uid=foobar', 'baz'))
+
+    def test_fail_unwilling_to_perform(self):
+        conn = simpleldap.Connection('ldap.utexas.edu')
+        self.assertFalse(conn.authenticate('cn=Anonymous', ''))
+
+    def test_fail_invalid_credentials(self):
+        conn = simpleldap.Connection('ldap.utexas.edu')
+        self.assertFalse(conn.authenticate('uid=foobar', 'baz'))
+
+
 class LDAPItemTests(TestCase):
 
     mock_results = [
