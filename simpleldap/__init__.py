@@ -99,12 +99,14 @@ class Connection(object):
     # this to a class of their liking.
     result_item_class = LDAPItem
 
-    def __init__(self, hostname, port=None, dn='', password='',
+    def __init__(self, hostname='localhost', port=None, dn='', password='',
                  encryption=None, require_cert=None, debug=False,
                  initialize_kwargs=None, options=None):
         """
         Bind to hostname:port using the passed distinguished name (DN), as
         ``dn``, and password.
+
+        If ``hostname`` is not given, default to ``'localhost'``.
 
         If no user and password is given, try to connect anonymously with a
         blank DN and password.
@@ -112,7 +114,8 @@ class Connection(object):
         ``encryption`` should be one of ``'tls'``, ``'ssl'``, or ``None``.
         If ``'tls'``, then the standard port 389 is used by default and after
         binding, tls is started.  If ``'ssl'``, then port 636 is used by
-        default.
+        default.  ``port`` can optionally be given for connecting to a
+        non-default port.
 
         ``require_cert`` is None by default.  Set this to ``True`` or
         ``False`` to set the ``OPT_X_TLS_REQUIRE_CERT`` ldap option.
