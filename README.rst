@@ -11,8 +11,16 @@ interface for LDAP server connections, LDAP objects, and the common get and
 search operations.
 
 
-Example
-=======
+Installation
+============
+
+Install using pip::
+
+    pip install simpleldap
+
+
+Examples
+========
 
 A quick and easy example using ``simpleldap``::
 
@@ -32,10 +40,10 @@ The ``Connection`` object can also be used as a context manager, e.g.::
     with simpleldap.Connection('directory.example.com') as conn:
         users = conn.search("(&(givenName=Joe)(sn=Smith))")
 
+A common method for authenticating users is to connect to an LDAP server using
+a service user/account and then attempt a bind operation using the user's
+credentials (i.e. DN and password).  The ``authenticate`` method makes this
+simple::
 
-Installation
-============
-
-Install using pip::
-
-    pip install simpleldap
+    with simpleldap.Connection('directory.example.com') as conn:
+        is_valid = conn.authenticate('uid=myuser,dc=directory,dc=example,dc=com', 'password')
