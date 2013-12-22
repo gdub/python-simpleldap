@@ -131,7 +131,7 @@ class Connection(object):
         If ``debug`` is ``True``, debug options are turned on within ldap and
         statements are ouput to standard error.  Default is ``False``.
 
-        If give, ``options`` should be a dictionary of any additional
+        If given, ``options`` should be a dictionary of any additional
         connection-specific ldap  options to set, e.g.:
         ``{'OPT_TIMELIMIT': 3}``.
         """
