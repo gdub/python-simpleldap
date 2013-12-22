@@ -101,7 +101,7 @@ class Connection(object):
 
     def __init__(self, hostname, port=None, dn='', password='',
                  encryption=None, require_cert=None, debug=False,
-                 initialize_kwargs=None, options=None):
+                 initialize_kwargs=None, options=None, search_defaults=None):
         """
         Bind to hostname:port using the passed distinguished name (DN), as
         ``dn``, and password.
@@ -123,9 +123,14 @@ class Connection(object):
         If give, ``options`` should be a dictionary of any additional
         connection-specific ldap  options to set, e.g.:
         ``{'OPT_TIMELIMIT': 3}``.
-        """
 
-        self._search_defaults = {}
+        If given, ``search_defaults`` should be a dictionary of default
+        parameters to be passed to the search method.
+        """
+        if search_defaults is None:
+            self._search_defaults = {}
+        else:
+            self._search_defaults = search_defaults
 
         if not encryption or encryption == 'tls':
             protocol = 'ldap'

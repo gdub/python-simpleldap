@@ -87,9 +87,8 @@ class ConnectionTests(TestCase):
         self.assertTrue('cn' in obj)
 
     def test_search_defaults(self):
-        conn = simpleldap.Connection('ldap.ucdavis.edu')
+        conn = simpleldap.Connection('ldap.ucdavis.edu', search_defaults={'limit': 1})
         conn.set_search_defaults(base_dn='ou=Groups,dc=ucdavis,dc=edu')
-        conn.set_search_defaults(limit=1)
         self.assertRaises(ldap.SIZELIMIT_EXCEEDED, conn.search, 'cn=*')
         kwargs = {'filter': 'cn=External Anonymous', }
         conn.clear_search_defaults(['limit'])
