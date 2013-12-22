@@ -86,6 +86,22 @@ class ConnectionTests(TestCase):
         self.assertEqual(len(obj), 1)
         self.assertTrue('cn' in obj)
 
+    def test_search_defaults(self):
+        conn = simpleldap.Connection('ldap.ucdavis.edu', search_defaults={'limit': 1})
+        conn.set_search_defaults(base_dn='ou=Groups,dc=ucdavis,dc=edu')
+        self.assertRaises(ldap.SIZELIMIT_EXCEEDED, conn.search, 'cn=*')
+        kwargs = {'filter': 'cn=External Anonymous', }
+        conn.clear_search_defaults(['limit'])
+        # Should return all attrs.
+        self.assertTrue(len(conn.search(**kwargs)[0]) > 2)
+        # Should return just cn attr.
+        conn.set_search_defaults(attrs=['cn'])
+        obj = conn.search(**kwargs)[0]
+        self.assertEqual(len(obj), 1)
+        self.assertTrue('cn' in obj)
+        conn.clear_search_defaults()
+        self.assertEqual(conn._search_defaults, {})
+
     def test_get(self):
         conn = simpleldap.Connection('ldap.ucdavis.edu')
         obj = conn.get('cn=External Anonymous',
