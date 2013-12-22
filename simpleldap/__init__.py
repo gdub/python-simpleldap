@@ -167,22 +167,27 @@ class Connection(object):
         """
         Set defaults for search.
 
-        conn.set_search_defaults(basedn='dc=example,dc=com', timeout=100)
-        conn.set_search_defaults(attrs=['cn'], scope=ldap.SCOPE_BASE)
+        Examples::
 
+            conn.set_search_defaults(basedn='dc=example,dc=com', timeout=100)
+            conn.set_search_defaults(attrs=['cn'], scope=ldap.SCOPE_BASE)
         """
         self._search_defaults.update(kwargs)
 
     def clear_search_defaults(self, args=None):
         """
-        Unset defaults that might have been set by set_search_defaults
+        Clear all search defaults specified by the list of parameter names
+        given as ``args``.  If ``args`` is not given, then clear all existing
+        search defaults.
 
-        conn.set_search_defaults(scope=ldap.SCOPE_BASE)
-        conn.clear_search_defaults(['scope'])
+        Examples::
+
+            conn.set_search_defaults(scope=ldap.SCOPE_BASE, attrs=['cn'])
+            conn.clear_search_defaults(['scope'])
+            conn.clear_search_defaults()
         """
-
         if args is None:
-            self._search_defaults = {}
+            self._search_defaults.clear()
         else:
             for arg in args:
                 if arg in self._search_defaults:
