@@ -47,3 +47,14 @@ simple::
 
     with simpleldap.Connection('directory.example.com') as conn:
         is_valid = conn.authenticate('uid=myuser,dc=directory,dc=example,dc=com', 'password')
+
+LDAP also offers a feature to compare an attribute's value with a given string.
+This can occasionally be more efficient and expressive than grabbing an entire
+object from the LDAP store. ``simpleldap`` offers a ``compare`` method for this
+feature::
+
+    >>> conn = simpleldap.Connection('directory.example.com')
+    >>> user_dn = 'uid=myuser,dc=directory,dc=example,dc=com'
+    >>> conn.compare(user_dn, 'cn', 'Joe Smith')
+    True
+
