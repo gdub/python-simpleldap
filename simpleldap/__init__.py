@@ -272,3 +272,11 @@ class Connection(object):
             return False
         else:
             return True
+
+    def compare(self, dn, attr, value):
+        """
+        Convenience method for ldap's "compare" family of function, which
+        return a boolean value to indicate whether the `dn` object's `attr`
+        contains `value` or not.
+        """
+        return self.connection.compare_s(dn, attr, value) == 1
