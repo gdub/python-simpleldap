@@ -275,8 +275,9 @@ class Connection(object):
 
     def compare(self, dn, attr, value):
         """
-        Convenience method for ldap's "compare" family of function, which
-        return a boolean value to indicate whether the `dn` object's `attr`
-        contains `value` or not.
+        Compare the ``attr`` of the entry ``dn`` with given ``value``.
+
+        This is a convenience wrapper for the ldap library's ``compare``
+        function that returns a boolean value instead of 1 or 0.
         """
         return self.connection.compare_s(dn, attr, value) == 1
