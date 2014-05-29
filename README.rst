@@ -48,6 +48,12 @@ simple::
     with simpleldap.Connection('directory.example.com') as conn:
         is_valid = conn.authenticate('uid=myuser,dc=directory,dc=example,dc=com', 'password')
 
+.. note::
+    The ``authentication`` method does not perform an unbind and does not bind again
+    using the original connection's credentials; therefore, any further
+    actions following a successful ``authenticate`` call will be performed as
+    the authenticated user.
+
 LDAP also offers a feature to compare an attribute's value with a given string.
 This can occasionally be more efficient and expressive than grabbing an entire
 object from the LDAP store. ``simpleldap`` offers a ``compare`` method for this
