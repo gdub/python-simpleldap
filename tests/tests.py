@@ -120,6 +120,8 @@ class ConnectionTests(TestCase):
         obj = conn.get('cn=External Anonymous',
                        base_dn='ou=Groups,dc=ucdavis,dc=edu')
         self.assertTrue(conn.compare(obj.dn, 'cn', 'External Anonymous'))
+        self.assertFalse(conn.compare(obj.dn, 'cn', 'foo'))
+
 
 class AuthenticateTests(TestCase):
 
