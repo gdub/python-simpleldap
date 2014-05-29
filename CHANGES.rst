@@ -3,6 +3,18 @@ Changelog
 =========
 
 
+0.8 - May 28, 2014
+==================
+* Dropped support for Python 2.5.
+* Removed distribute_setup bootstrap file, installation now requires
+  setuptools to already be installed.
+* #1: Added an ``authenticate`` method for authenticating a given DN and
+  password using a bind operation.
+* #2: Added the ability to set (and clear) defaults for the ``search`` method.
+* #4: Added a ``compare`` method, wrapping ldap's compare, to return boolean
+  values instead of 0 and 1.
+
+
 0.7.1 - July 19, 2012
 =====================
 * Added tox testing configuration, setup to run against Python 2.5, 2.6,
