@@ -115,6 +115,11 @@ class ConnectionTests(TestCase):
         self.assertRaises(simpleldap.MultipleObjectsFound, conn.get, 'cn=*',
                           base_dn='ou=Groups,dc=ucdavis,dc=edu')
 
+    def test_compare(self):
+        conn = simpleldap.Connection('ldap.ucdavis.edu')
+        obj = conn.get('cn=External Anonymous',
+                       base_dn='ou=Groups,dc=ucdavis,dc=edu')
+        self.assert_(conn.compare(obj.dn, 'cn', 'External Anonymous'))
 
 class AuthenticateTests(TestCase):
 
