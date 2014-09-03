@@ -1,5 +1,4 @@
 include MANIFEST.in
-include distribute_setup.py
 include *.ini
 include *.txt
 include *.rst
