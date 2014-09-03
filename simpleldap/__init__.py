@@ -180,7 +180,7 @@ class Connection(object):
 
         Examples::
 
-            conn.set_search_defaults(basedn='dc=example,dc=com', timeout=100)
+            conn.set_search_defaults(base_dn='dc=example,dc=com', timeout=100)
             conn.set_search_defaults(attrs=['cn'], scope=ldap.SCOPE_BASE)
         """
         self._search_defaults.update(kwargs)
